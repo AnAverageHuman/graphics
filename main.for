@@ -1,0 +1,12 @@
+      PROGRAM MAIN
+          USE CONFIG
+          USE DISPLAY
+
+          IMPLICIT NONE
+
+          ALLOCATE(THEDISPLAY(3, DIMD, DIMC, DIMR)) ! left to right
+
+          CALL DISPLAY_PRINT(THEDISPLAY)
+          DEALLOCATE(THEDISPLAY)
+      END PROGRAM MAIN
+
