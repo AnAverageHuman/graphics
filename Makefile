@@ -46,10 +46,8 @@ $(OUTFILE): $(EXECUTABLE)
 
 $(DEPLIST): $(SRC)
 	@$(Q)echo "  DEPGEN	$@"
-	@for i in $^; do \
-		./depgen.awk -v o="$(OBJDIR)/" -v s="$(SRCDIR)/" $$i; \
-		done > $@.tmp
-	@mv $@.tmp $@
+	@$(file > $@)
+	@$(foreach i,$^,./depgen.awk -v o="$(OBJDIR)/" -v s="$(SRCDIR)/" $i >> $@;)
 	$(include $(DEPLIST))
 
 ifeq ($(filter $(MAKECMDGOALS),clean),)
