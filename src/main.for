@@ -6,8 +6,6 @@
           IMPLICIT NONE
           INTEGER :: LINES(2, 2, 10), I
 
-          ALLOCATE(THEDISPLAY(3, DIMD, DIMC, DIMR)) ! left to right
-
           lines(:, 1, 1) = (/425,250/)
           lines(:, 2, 1) = (/175,400/)
           lines(:, 1, 2) = (/425,250/)
@@ -35,6 +33,5 @@
           END DO
 
           CALL DISPLAY_PRINT(THEDISPLAY)
-          DEALLOCATE(THEDISPLAY)
       END PROGRAM MAIN
 
