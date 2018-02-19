@@ -5,7 +5,7 @@ BEGINFILE {
     printf("%s:", FILENAME);
 }
 
-$1 ~ "USE" && NF == 2 { printf " %s%s.o", o, tolower($2) }
+toupper($1) ~ "USE" && NF == 2 { printf " %s%s.o", o, tolower($2) }
 
 END { print }
 
