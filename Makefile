@@ -23,7 +23,7 @@ endif
 all: $(DEPLIST) $(OUTFILE)
 
 debug: FFLAGS=-g
-debug: clean all
+debug: clean $(DEPLIST) all
 
 clean:
 	@$(foreach i, $(CLEANTARGETS), $(Q)echo "  CLEAN		$(i)"; rm -rf $(i);)
