@@ -4,13 +4,16 @@ OBJDIR := build
 DEPLIST := depend.mk
 CLEANTARGETS := $(OBJDIR) $(EXECUTABLE) $(DEPLIST)
 
-FFLAGS ?= -O2 -march=native -pipe
 LDFLAGS ?= -Wl,-O1 -Wl,--as-needed
+ifneq (,$(findstring ifort,$(FC))) # we are using Intel's ifort
+FFLAGS ?= -O3 -xHost -fp-model source
+FFLAGS += -module $(OBJDIR)
+else # we are probably using gcc's gfortran
+FFLAGS ?= -O3 -march=native -pipe
+FFLAGS += -J $(OBJDIR)
+endif
 
 SRCDIR := src
-FC := gfortran 
-FFLAGS += -J $(OBJDIR)
-
 SRC := $(wildcard $(SRCDIR)/*.for)
 OBJ := $(patsubst $(SRCDIR)/%.for,$(OBJDIR)/%.o,$(SRC))
 
