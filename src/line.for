@@ -9,7 +9,7 @@
       CONTAINS
           RECURSIVE SUBROUTINE DRAWLINE(DISPLAY, P1, P2, COLOR)
               INTEGER, INTENT(INOUT), DIMENSION(:, :, :, :) :: DISPLAY
-              INTEGER, INTENT(IN), DIMENSION(2) :: P1, P2
+              INTEGER, INTENT(IN), DIMENSION(3) :: P1, P2
               INTEGER, INTENT(IN), DIMENSION(3) :: COLOR
 
               DX = P2(1) - P1(1)
