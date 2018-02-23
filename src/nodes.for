@@ -78,10 +78,10 @@
 
               DEALLOCATE(THIS%DATA)
               IF (ASSOCIATED(THIS%NEXT)) THEN
-                  THIS%NEXT%PREV => THIS%PREV
+                  CALL THIS%NEXT%SETPREV(THIS%GETPREV())
               END IF
               IF (ASSOCIATED(THIS%PREV)) THEN
-                  THIS%PREV%NEXT => THIS%NEXT
+                  CALL THIS%PREV%SETNEXT(THIS%GETNEXT())
               END IF
           END SUBROUTINE RMNODE
       END MODULE NODES
