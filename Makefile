@@ -25,7 +25,7 @@ endif
 .PHONY: all clean
 all: $(DEPLIST) $(OUTFILE)
 
-debug: FFLAGS=-g
+debug: FFLAGS := $(patsubst -O%,-g,$(FFLAGS))
 debug: clean $(DEPLIST) all
 
 clean:
