@@ -22,7 +22,7 @@ ifneq ($(V),)
 	Q = true ||
 endif
 
-.PHONY: all clean
+.PHONY: all clean debug
 all: $(DEPLIST) $(OUTFILE)
 
 debug: FFLAGS := $(patsubst -O%,-g,$(FFLAGS))
