@@ -1,35 +1,71 @@
       MODULE EDGEMATRIX
           USE LINE
-          USE NODES
+          USE MATRIXUTIL
 
           IMPLICIT NONE
           PRIVATE
           PUBLIC :: EDGMAT
 
-          TYPE, EXTENDS(NODE) :: EDGMAT
+          TYPE :: EDGMAT
               PRIVATE
-              CLASS(NODE), POINTER :: FIRST => NULL(), LAST => NULL()
+              INTEGER, DIMENSION(:, :), ALLOCATABLE :: EM
+              INTEGER :: SIZE
           CONTAINS
-              PROCEDURE, NON_OVERRIDABLE :: ADDPOINT
-              PROCEDURE, NON_OVERRIDABLE :: ADDEDGE
-              PROCEDURE, NON_OVERRIDABLE :: DRAW
+              PROCEDURE, PASS, NON_OVERRIDABLE :: INIT
+              PROCEDURE, PASS, NON_OVERRIDABLE :: REALLOCEM
+              PROCEDURE, PASS, NON_OVERRIDABLE :: GETCOLS
+              PROCEDURE, PASS, NON_OVERRIDABLE :: GETROWS
+              PROCEDURE, PASS, NON_OVERRIDABLE :: ADDPOINT
+              PROCEDURE, PASS, NON_OVERRIDABLE :: ADDEDGE
+              PROCEDURE, PASS, NON_OVERRIDABLE :: DRAW
+              PROCEDURE, PASS, NON_OVERRIDABLE :: DUMP
           END TYPE EDGMAT
       CONTAINS
+          SUBROUTINE INIT(THIS)
+              CLASS(EDGMAT) :: THIS
+
+              ALLOCATE(THIS%EM(3, 1))
+              THIS%SIZE = 0
+          END SUBROUTINE INIT
+
+          PURE SUBROUTINE REALLOCEM(THIS)    ! double allocated size
+              CLASS(EDGMAT), INTENT(INOUT) :: THIS
+              INTEGER, DIMENSION(:, :), ALLOCATABLE :: TMP
+
+              ALLOCATE(TMP(3, THIS%GETROWS() * 2))
+              TMP(1:3, 1:THIS%SIZE) = THIS%EM
+              CALL MOVE_ALLOC(TMP, THIS%EM)
+          END SUBROUTINE REALLOCEM  ! implicit deallocation here
+
+          PURE FUNCTION GETCOLS(THIS) RESULT(C) ! QA: currently unused
+              CLASS(EDGMAT), INTENT(IN) :: THIS
+              INTEGER :: C
+
+              C = MERGE(UBOUND(THIS%EM, 1), 0, ALLOCATED(THIS%EM))
+          END FUNCTION GETCOLS
+
+          PURE FUNCTION GETROWS(THIS) RESULT(R)
+              CLASS(EDGMAT), INTENT(IN) :: THIS
+              INTEGER :: R
+
+              R = MERGE(UBOUND(THIS%EM, 2), 0, ALLOCATED(THIS%EM))
+          END FUNCTION GETROWS
+
           SUBROUTINE ADDPOINT(THIS, DATA)
               CLASS(EDGMAT), INTENT(INOUT) :: THIS
-              INTEGER,       INTENT(IN)    :: DATA(:)
+              INTEGER,       INTENT(IN)    :: DATA(3)
 
-              IF (ASSOCIATED(THIS%FIRST)) THEN ! not null; push on front
-                  THIS%FIRST => NODE(DATA, THIS%FIRST, NULL())
-              ELSE
-                  THIS%FIRST => NODE(DATA, NULL(), NULL())
-                  THIS%LAST => THIS%FIRST
+              IF (THIS%SIZE .GE. THIS%GETROWS()) THEN
+                  CALL THIS%REALLOCEM()
               END IF
+
+              THIS%SIZE = THIS%SIZE + 1
+              THIS%EM(:, THIS%SIZE) = DATA
           END SUBROUTINE ADDPOINT
 
           SUBROUTINE ADDEDGE(THIS, D1, D2)
               CLASS(EDGMAT), INTENT(INOUT) :: THIS
-              INTEGER,       INTENT(IN)    :: D1(:), D2(:)
+              INTEGER,       INTENT(IN)    :: D1(3), D2(3)
 
               CALL THIS%ADDPOINT(D1)
               CALL THIS%ADDPOINT(D2)
@@ -39,21 +75,18 @@
               CLASS(EDGMAT), INTENT(IN)    :: THIS
               INTEGER,       INTENT(INOUT) :: DISPLAY(:, :, :, :)
               INTEGER,       INTENT(IN)    :: COLOR(3)
-              CLASS(NODE), POINTER  :: CURR
-              INTEGER, DIMENSION(3) :: P1, P2
+              INTEGER :: I
 
-              CURR => THIS%FIRST
-              DO WHILE (ASSOCIATED(CURR%GETNEXT()))
-                  ! TODO: make this block look prettier
-                  SELECT TYPE (X => CURR%GETVAL())
-                      TYPE IS (INTEGER); P1 = X
-                  END SELECT
-                  SELECT TYPE (X => CURR%NEXT%GETVAL())
-                      TYPE IS (INTEGER); P2 = X
-                  END SELECT
-                  CALL DRAWLINE(DISPLAY, P1, P2, COLOR)
-                  CURR => CURR%GETNEXT()
+              DO I = 1, THIS%SIZE - 1, 2
+                  CALL DRAWLINE(DISPLAY, THIS%EM(:, I),
+     +                          THIS%EM(:, I + 1), COLOR)
               END DO
           END SUBROUTINE DRAW
+
+          SUBROUTINE DUMP(THIS)
+              CLASS(EDGMAT), INTENT(IN)    :: THIS
+
+              CALL MATRIX_PRINT(THIS%EM)
+          END SUBROUTINE DUMP
       END MODULE EDGEMATRIX
 
