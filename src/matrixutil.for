@@ -1,7 +1,8 @@
       MODULE MATRIXUTIL
           IMPLICIT NONE
           PRIVATE
-          PUBLIC :: MATRIX_PRINT, MATRIX_IDENT, MATRIX_MULT
+          PUBLIC :: MATRIX_PRINT, MATRIX_IDENT, MATRIX_SCALE,
+     +              MATRIX_MULT
       CONTAINS
           SUBROUTINE MATRIX_PRINT(MATRIX)
               REAL, INTENT(IN) :: MATRIX(:, :)
@@ -18,6 +19,17 @@
               M(:, :) = 0
               FORALL(I = 1:MIN(SIZE(M, 1), SIZE(M, 2))) M(I, I) = 1
           END SUBROUTINE MATRIX_IDENT
+
+          PURE SUBROUTINE MATRIX_SCALE(M, S)
+              REAL, INTENT(INOUT) :: M(:, :)
+              REAL, INTENT(IN)    :: S(3)
+              INTEGER :: I
+
+              CALL MATRIX_IDENT(M)
+              FORALL (I = 1:MIN(SIZE(M, 1), SIZE(M, 2)))
+                  M(I, I) = M(I, I) * S(I)
+              END FORALL
+          END SUBROUTINE MATRIX_SCALE
 
           PURE SUBROUTINE MATRIX_MULT(A, B, C)
               !   A   n x m   SIZE(A, 2), SIZE(A, 1)
