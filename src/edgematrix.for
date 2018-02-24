@@ -8,7 +8,7 @@
 
           TYPE :: EDGMAT
               PRIVATE
-              INTEGER, DIMENSION(:, :), ALLOCATABLE :: EM
+              REAL, DIMENSION(:, :), ALLOCATABLE :: EM
               INTEGER :: SIZE
           CONTAINS
               PROCEDURE, PASS, NON_OVERRIDABLE :: INIT
@@ -30,7 +30,7 @@
 
           PURE SUBROUTINE REALLOCEM(THIS)    ! double allocated size
               CLASS(EDGMAT), INTENT(INOUT) :: THIS
-              INTEGER, DIMENSION(:, :), ALLOCATABLE :: TMP
+              REAL, DIMENSION(:, :), ALLOCATABLE :: TMP
 
               ALLOCATE(TMP(3, THIS%GETROWS() * 2))
               TMP(1:3, 1:THIS%SIZE) = THIS%EM
@@ -53,7 +53,7 @@
 
           SUBROUTINE ADDPOINT(THIS, DATA)
               CLASS(EDGMAT), INTENT(INOUT) :: THIS
-              INTEGER,       INTENT(IN)    :: DATA(3)
+              REAL,          INTENT(IN)    :: DATA(3)
 
               IF (THIS%SIZE .GE. THIS%GETROWS()) THEN
                   CALL THIS%REALLOCEM()
@@ -65,7 +65,7 @@
 
           SUBROUTINE ADDEDGE(THIS, D1, D2)
               CLASS(EDGMAT), INTENT(INOUT) :: THIS
-              INTEGER,       INTENT(IN)    :: D1(3), D2(3)
+              REAL,          INTENT(IN)    :: D1(3), D2(3)
 
               CALL THIS%ADDPOINT(D1)
               CALL THIS%ADDPOINT(D2)
@@ -77,9 +77,9 @@
               INTEGER,       INTENT(IN)    :: COLOR(3)
               INTEGER :: I
 
-              DO I = 1, THIS%SIZE - 1, 2
-                  CALL DRAWLINE(DISPLAY, THIS%EM(:, I),
-     +                          THIS%EM(:, I + 1), COLOR)
+              DO I = 1, THIS%SIZE - 1
+                  CALL DRAWLINE(DISPLAY, INT(THIS%EM(:, I)),
+     +                          INT(THIS%EM(:, I + 1)), COLOR)
               END DO
           END SUBROUTINE DRAW
 

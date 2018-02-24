@@ -4,7 +4,7 @@
           PUBLIC :: MATRIX_PRINT, MATRIX_IDENT, MATRIX_MULT
       CONTAINS
           SUBROUTINE MATRIX_PRINT(MATRIX)
-              INTEGER, INTENT(IN) :: MATRIX(:, :)
+              REAL, INTENT(IN) :: MATRIX(:, :)
               INTEGER :: ROW, COL
               DO ROW=1, SIZE(MATRIX, 2)
                   WRITE (*,*) (MATRIX(COL, ROW), COL=1, SIZE(MATRIX, 1))
@@ -12,7 +12,7 @@
           END SUBROUTINE MATRIX_PRINT
 
           PURE SUBROUTINE MATRIX_IDENT(M)
-              INTEGER, INTENT(INOUT) :: M(:, :)
+              REAL, INTENT(INOUT) :: M(:, :)
               INTEGER :: I
 
               M(:, :) = 0
@@ -24,8 +24,8 @@
               !   B   m x p   SIZE(B, 2), SIZE(A, 2)
               !   C   n x p   SIZE(B, 2), SIZE(A, 1)
 
-              INTEGER, INTENT(IN), DIMENSION(:, :) :: A, B
-              INTEGER, INTENT(OUT) :: C(SIZE(A,1), SIZE(B,2))
+              REAL, INTENT(IN), DIMENSION(:, :) :: A, B
+              REAL, INTENT(OUT) :: C(SIZE(A,1), SIZE(B,2))
               INTEGER :: I, J
 
               C(:, :) = 0
