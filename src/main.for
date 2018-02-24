@@ -8,6 +8,7 @@
           INTEGER, DIMENSION(3, DIMD, DIMC, DIMR) :: THEDISPLAY
           TYPE(EDGMAT) :: EDGES
 
+          CALL EDGES%INIT()
           CALL EDGES%ADDEDGE((/ 425, 250, 1 /), (/ 175, 400, 1 /))
           CALL EDGES%ADDEDGE((/ 125, 400, 1 /), (/  75, 350, 1 /))
           CALL EDGES%ADDEDGE((/  75, 300, 1 /), (/ 150, 250, 1 /))
