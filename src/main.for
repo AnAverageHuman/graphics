@@ -3,9 +3,12 @@
           USE DISPLAY
           USE EDGEMATRIX
           USE LINE
+          USE MATRIXUTIL
 
           IMPLICIT NONE
-          INTEGER, DIMENSION(3, DIMD, DIMC, DIMR) :: THEDISPLAY
+          INTEGER :: I, COLOR(3), THEDISPLAY(3, DIMD, DIMC, DIMR)
+          REAL :: SMAT(3)
+          REAL, ALLOCATABLE :: M(:, :)
           TYPE(EDGMAT) :: EDGES
 
           CALL EDGES%INIT()
@@ -16,7 +19,17 @@
           CALL EDGES%ADDEDGE((/ 125., 100., 1. /), (/ 175., 100., 1. /))
           CALL EDGES%ADDPOINT((/ 425., 250., 1. /))
 
-          CALL EDGES%DRAW(THEDISPLAY, (/100, 200, 105/))
+          COLOR = (/ 255, 0, 0 /)
+          SMAT = (/ 0.95, 0.95, 1.0 /)
+          ALLOCATE(M(EDGES%GETCOLS(), 3))
+
+          DO I = 1, 70
+              CALL EDGES%DRAW(THEDISPLAY, COLOR)
+              CALL MATRIX_SCALE(M, SMAT)
+              CALL EDGES%TRANSFORM(M)
+              COLOR(1) = COLOR(1) * 0.95
+          END DO
+
           CALL DISPLAY_PRINT(THEDISPLAY)
       END PROGRAM MAIN
 
