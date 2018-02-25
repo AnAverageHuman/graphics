@@ -12,20 +12,20 @@
           TYPE(EDGMAT) :: EDGES
 
           CALL EDGES%INIT()
-          CALL EDGES%ADDEDGE((/ 425._DP, 250._DP, 1._DP /),
-     +                       (/ 175._DP, 400._DP, 1._DP /))
-          CALL EDGES%ADDEDGE((/ 125._DP, 400._DP, 1._DP /),
-     +                       (/  75._DP, 350._DP, 1._DP /))
-          CALL EDGES%ADDEDGE((/  75._DP, 300._DP, 1._DP /),
-     +                       (/ 150._DP, 250._DP, 1._DP /))
-          CALL EDGES%ADDEDGE((/  75._DP, 200._DP, 1._DP /),
-     +                       (/  75._DP, 150._DP, 1._DP /))
-          CALL EDGES%ADDEDGE((/ 125._DP, 100._DP, 1._DP /),
-     +                       (/ 175._DP, 100._DP, 1._DP /))
-          CALL EDGES%ADDPOINT((/ 425._DP, 250._DP, 1._DP /))
+          CALL EDGES%ADDEDGE([425._DP, 250._DP, 1._DP],
+     +                       [175._DP, 400._DP, 1._DP])
+          CALL EDGES%ADDEDGE([125._DP, 400._DP, 1._DP],
+     +                       [ 75._DP, 350._DP, 1._DP])
+          CALL EDGES%ADDEDGE([ 75._DP, 300._DP, 1._DP],
+     +                       [150._DP, 250._DP, 1._DP])
+          CALL EDGES%ADDEDGE([ 75._DP, 200._DP, 1._DP],
+     +                       [ 75._DP, 150._DP, 1._DP])
+          CALL EDGES%ADDEDGE([125._DP, 100._DP, 1._DP],
+     +                       [175._DP, 100._DP, 1._DP])
+          CALL EDGES%ADDPOINT([425._DP, 250._DP, 1._DP])
 
-          COLOR = (/ 255, 0, 0 /)
-          SMAT = (/ 0.95, 0.95, 1.0 /)
+          COLOR = [255, 0, 0]
+          SMAT = [0.95, 0.95, 1.0]
           ALLOCATE(M(EDGES%GETCOLS(), 3))
 
           DO I = 1, 70

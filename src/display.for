@@ -24,11 +24,11 @@
               INTEGER, INTENT(IN) :: X, Y, Z, COLOR(3), BOUND(3)
               INTEGER :: P(3), I
               INTEGER, PARAMETER :: DIRECTIONS(3, 4) =
-     +          RESHAPE((/ 0,1,0,  0,0,1,  0,-1,0,  0,0,-1 /), (/3, 4/))
+     +          RESHAPE([0,1,0,  0,0,1,  0,-1,0,  0,0,-1], [3, 4])
 
               CALL PLOT(DISPLAY, X, Y, Z, COLOR)
               DO I = 1, SIZE(DIRECTIONS, 2)
-                  P = (/ Z, Y, X /) + DIRECTIONS(:, I)
+                  P = [Z, Y, X] + DIRECTIONS(:, I)
                   IF (P(1) > 0 .AND. P(1) <= SIZE(DISPLAY, 2) .AND.
      +                P(2) > 0 .AND. P(2) <= SIZE(DISPLAY, 3) .AND.
      +                P(3) > 0 .AND. P(3) <= SIZE(DISPLAY, 4) .AND.
