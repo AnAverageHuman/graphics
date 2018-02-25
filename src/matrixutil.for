@@ -1,11 +1,13 @@
       MODULE MATRIXUTIL
+          USE CONFIG
+
           IMPLICIT NONE
           PRIVATE
           PUBLIC :: MATRIX_PRINT, MATRIX_IDENT, MATRIX_SCALE,
      +              MATRIX_MULT
       CONTAINS
           SUBROUTINE MATRIX_PRINT(MATRIX)
-              REAL, INTENT(IN) :: MATRIX(:, :)
+              REAL(DP), INTENT(IN) :: MATRIX(:, :)
               INTEGER :: ROW, COL
               DO ROW=1, SIZE(MATRIX, 2)
                   WRITE (*,*) (MATRIX(COL, ROW), COL=1, SIZE(MATRIX, 1))
@@ -13,7 +15,7 @@
           END SUBROUTINE MATRIX_PRINT
 
           PURE SUBROUTINE MATRIX_IDENT(M)
-              REAL, INTENT(INOUT) :: M(:, :)
+              REAL(DP), INTENT(INOUT) :: M(:, :)
               INTEGER :: I
 
               M(:, :) = 0
@@ -21,8 +23,8 @@
           END SUBROUTINE MATRIX_IDENT
 
           PURE SUBROUTINE MATRIX_SCALE(M, S)
-              REAL, INTENT(INOUT) :: M(:, :)
-              REAL, INTENT(IN)    :: S(3)
+              REAL(DP), INTENT(INOUT) :: M(:, :)
+              REAL(DP), INTENT(IN)    :: S(3)
               INTEGER :: I
 
               CALL MATRIX_IDENT(M)
@@ -36,8 +38,8 @@
               !   B   m x p   SIZE(B, 2), SIZE(A, 2)
               !   C   n x p   SIZE(B, 2), SIZE(A, 1)
 
-              REAL, INTENT(IN), DIMENSION(:, :) :: A, B
-              REAL, INTENT(OUT) :: C(SIZE(A,1), SIZE(B,2))
+              REAL(DP), INTENT(IN), DIMENSION(:, :) :: A, B
+              REAL(DP), INTENT(OUT) :: C(SIZE(A,1), SIZE(B,2))
               INTEGER :: I, J
 
               C(:, :) = 0

@@ -7,17 +7,22 @@
 
           IMPLICIT NONE
           INTEGER :: I, COLOR(3), THEDISPLAY(3, DIMD, DIMC, DIMR)
-          REAL :: SMAT(3)
-          REAL, ALLOCATABLE :: M(:, :)
+          REAL(DP) :: SMAT(3)
+          REAL(DP), ALLOCATABLE :: M(:, :)
           TYPE(EDGMAT) :: EDGES
 
           CALL EDGES%INIT()
-          CALL EDGES%ADDEDGE((/ 425., 250., 1. /), (/ 175., 400., 1. /))
-          CALL EDGES%ADDEDGE((/ 125., 400., 1. /), (/  75., 350., 1. /))
-          CALL EDGES%ADDEDGE((/  75., 300., 1. /), (/ 150., 250., 1. /))
-          CALL EDGES%ADDEDGE((/  75., 200., 1. /), (/  75., 150., 1. /))
-          CALL EDGES%ADDEDGE((/ 125., 100., 1. /), (/ 175., 100., 1. /))
-          CALL EDGES%ADDPOINT((/ 425., 250., 1. /))
+          CALL EDGES%ADDEDGE((/ 425._DP, 250._DP, 1._DP /),
+     +                       (/ 175._DP, 400._DP, 1._DP /))
+          CALL EDGES%ADDEDGE((/ 125._DP, 400._DP, 1._DP /),
+     +                       (/  75._DP, 350._DP, 1._DP /))
+          CALL EDGES%ADDEDGE((/  75._DP, 300._DP, 1._DP /),
+     +                       (/ 150._DP, 250._DP, 1._DP /))
+          CALL EDGES%ADDEDGE((/  75._DP, 200._DP, 1._DP /),
+     +                       (/  75._DP, 150._DP, 1._DP /))
+          CALL EDGES%ADDEDGE((/ 125._DP, 100._DP, 1._DP /),
+     +                       (/ 175._DP, 100._DP, 1._DP /))
+          CALL EDGES%ADDPOINT((/ 425._DP, 250._DP, 1._DP /))
 
           COLOR = (/ 255, 0, 0 /)
           SMAT = (/ 0.95, 0.95, 1.0 /)

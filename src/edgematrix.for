@@ -1,4 +1,5 @@
       MODULE EDGEMATRIX
+          USE CONFIG
           USE LINE
           USE MATRIXUTIL
 
@@ -8,7 +9,7 @@
 
           TYPE :: EDGMAT
               PRIVATE
-              REAL, DIMENSION(:, :), ALLOCATABLE :: EM
+              REAL(DP), DIMENSION(:, :), ALLOCATABLE :: EM
               INTEGER :: SIZE
           CONTAINS
               PROCEDURE, PASS, NON_OVERRIDABLE :: INIT
@@ -31,7 +32,7 @@
 
           PURE SUBROUTINE REALLOCEM(THIS)    ! double allocated size
               CLASS(EDGMAT), INTENT(INOUT) :: THIS
-              REAL, DIMENSION(:, :), ALLOCATABLE :: TMP
+              REAL(DP), DIMENSION(:, :), ALLOCATABLE :: TMP
 
               ALLOCATE(TMP(3, THIS%GETROWS() * 2))
               TMP(1:3, 1:THIS%SIZE) = THIS%EM
@@ -54,7 +55,7 @@
 
           SUBROUTINE ADDPOINT(THIS, DATA)
               CLASS(EDGMAT), INTENT(INOUT) :: THIS
-              REAL,          INTENT(IN)    :: DATA(3)
+              REAL(DP),      INTENT(IN)    :: DATA(3)
 
               IF (THIS%SIZE .GE. THIS%GETROWS()) THEN
                   CALL THIS%REALLOCEM()
@@ -66,7 +67,7 @@
 
           SUBROUTINE ADDEDGE(THIS, D1, D2)
               CLASS(EDGMAT), INTENT(INOUT) :: THIS
-              REAL,          INTENT(IN)    :: D1(3), D2(3)
+              REAL(DP),      INTENT(IN)    :: D1(3), D2(3)
 
               CALL THIS%ADDPOINT(D1)
               CALL THIS%ADDPOINT(D2)
@@ -86,11 +87,11 @@
 
           SUBROUTINE TRANSFORM(THIS, MATRIX)
               CLASS(EDGMAT), INTENT(INOUT) :: THIS
-              REAL, DIMENSION(:, :), INTENT(IN) :: MATRIX
-              REAL, DIMENSION(:, :), ALLOCATABLE :: TMP
+              REAL(DP), DIMENSION(:, :), INTENT(IN) :: MATRIX
+              REAL(DP), DIMENSION(:, :), ALLOCATABLE :: TMP
 
               ALLOCATE(TMP(THIS%GETCOLS(), THIS%GETROWS()))
-              CALL MATRIX_MULT(MATRIX, REAL(THIS%EM), TMP)
+              CALL MATRIX_MULT(MATRIX, THIS%EM, TMP)
               CALL MOVE_ALLOC(TMP, THIS%EM)
           END SUBROUTINE TRANSFORM
 
