@@ -6,7 +6,7 @@ CLEANTARGETS := $(OBJDIR) $(EXECUTABLE) $(DEPLIST)
 
 LDFLAGS ?= -Wl,-O1 -Wl,--as-needed
 ifneq (,$(findstring ifort,$(FC))) # we are using Intel's ifort
-FFLAGS ?= -O3 -xHost -fp-model source
+FFLAGS ?= -O3 -xHost -fp-model source -standard-semantics
 FFLAGS += -module $(OBJDIR)
 else # we are probably using gcc's gfortran
 FFLAGS ?= -O3 -march=native -pipe
