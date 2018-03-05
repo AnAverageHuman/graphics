@@ -3,8 +3,8 @@
 
           IMPLICIT NONE
           PRIVATE
-          PUBLIC :: MATRIX_PRINT, MATRIX_IDENT, MATRIX_SCALE,
-     +              MATRIX_MULT
+          PUBLIC :: MATRIX_PRINT, MATRIX_IDENT, MATRIX_TRANSLATE,
+     +              MATRIX_SCALE, MATRIX_MULT
       CONTAINS
           SUBROUTINE MATRIX_PRINT(MATRIX)
               REAL(DP), INTENT(IN) :: MATRIX(:, :)
@@ -21,6 +21,15 @@
               M(:, :) = 0
               FORALL(I = 1:MIN(SIZE(M, 1), SIZE(M, 2))) M(I, I) = 1
           END SUBROUTINE MATRIX_IDENT
+
+          PURE SUBROUTINE MATRIX_TRANSLATE(M, S)
+              REAL(DP), INTENT(INOUT) :: M(:, :)
+              REAL(DP), INTENT(IN)    :: S(3)
+              INTEGER :: I
+
+              CALL MATRIX_IDENT(M)
+              FORALL(I = 1:3) M(4, I) = S(I)
+          END SUBROUTINE MATRIX_TRANSLATE
 
           PURE SUBROUTINE MATRIX_SCALE(M, S)
               REAL(DP), INTENT(INOUT) :: M(:, :)
