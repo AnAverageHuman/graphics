@@ -33,23 +33,23 @@
               END FORALL
           END SUBROUTINE MATRIX_SCALE
 
-          PURE SUBROUTINE MATRIX_MULT(A, B, C)
+          PURE FUNCTION MATRIX_MULT(A, B) RESULT(C)
               !   A   n x m   SIZE(A, 2), SIZE(A, 1)
               !   B   m x p   SIZE(B, 2), SIZE(A, 2)
-              !   C   n x p   SIZE(B, 2), SIZE(A, 1)
+              !   C   n x p   SIZE(B, 1), SIZE(A, 2)
 
               REAL(DP), INTENT(IN), DIMENSION(:, :) :: A, B
-              REAL(DP), INTENT(OUT) :: C(SIZE(A,1), SIZE(B,2))
-              INTEGER :: I, J
+              REAL(DP) :: C(SIZE(B,1), SIZE(A,2))
+              INTEGER  :: I, J, K
 
               C(:, :) = 0
-              DO I = 1, SIZE(B, 2)
-                  DO J = 1, SIZE(A, 2)
-C                     DO K = 1, SIZE(A, 1)
-                      C(:, I) = C(:, I) + A(:, J) * B(J, I)
+              DO I = 1, SIZE(A, 2)
+                  DO J = 1, SIZE(B, 2)
+C                     DO K = 1, SIZE(B, 1)
+                      C(:, I) = C(:, I) + A(J, I) * B(:, J)
 C                     END DO
                   END DO
               END DO
-          END SUBROUTINE MATRIX_MULT   ! possibly faster than MATMUL()
+          END FUNCTION MATRIX_MULT   ! possibly faster than MATMUL()
       END MODULE MATRIXUTIL
 
