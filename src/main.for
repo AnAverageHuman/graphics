@@ -8,7 +8,7 @@
           IMPLICIT NONE
           INTEGER :: I, COLOR(3), THEDISPLAY(3, DIMD, DIMC, DIMR)
           REAL(DP) :: SMAT(4)
-          REAL(DP), ALLOCATABLE :: M(:, :)
+          REAL(DP) :: M(4, 4)
           TYPE(EDGMAT) :: EDGES
 
           CALL EDGES%INIT()
@@ -26,7 +26,6 @@
 
           COLOR = [255, 0, 0]
           SMAT = [0.95, 0.95, 1.0, 0.0]
-          ALLOCATE(M(EDGES%GETCOLS(), 3))
 
           DO I = 1, 70
               CALL EDGES%DRAW(THEDISPLAY, COLOR)
