@@ -1,5 +1,6 @@
 OUTFILE := image.ppm
 EXECUTABLE := a.out
+SCRIPT := script
 OBJDIR := build
 DEPLIST := depend.mk
 CLEANTARGETS := $(OBJDIR) $(EXECUTABLE) $(DEPLIST)
@@ -45,7 +46,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.for $(OBJDIR)
 
 $(OUTFILE): $(EXECUTABLE)
 	@$(Q)echo "  PPM		$@"
-	@./$(EXECUTABLE) > $(OUTFILE)
+	@./$(EXECUTABLE) $(SCRIPT) > $(OUTFILE)
 
 $(DEPLIST): $(SRC)
 	@$(Q)echo "  DEPGEN	$@"

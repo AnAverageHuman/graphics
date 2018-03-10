@@ -7,33 +7,57 @@
 
           IMPLICIT NONE
           INTEGER :: I, COLOR(3), THEDISPLAY(3, DIMD, DIMC, DIMR)
-          REAL(DP) :: SMAT(4)
-          REAL(DP) :: M(4, 4)
+
+          CHARACTER(LEN=128) :: FILENAME ! hard-limit for now
+          CHARACTER(LEN=128) :: LINE
+          LOGICAL  :: BOOL
+          INTEGER  :: IOS
+          REAL(DP) :: RDATA(10)
+          REAL(DP) :: TMPTRANS(4, 4)
+
+          REAL(DP) :: TRANSM(4, 4)
           TYPE(EDGMAT) :: EDGES
 
+          CALL GET_COMMAND_ARGUMENT(1, FILENAME)
+          INQUIRE(FILE=FILENAME, EXIST=BOOL)
+          IF (.NOT. BOOL) THEN
+              WRITE (0,*) 'Specified file "', TRIM(ADJUSTL(FILENAME)),
+     +                    '" does not exist; bailing out.'
+              STOP
+          END IF
+
           CALL EDGES%INIT()
-          CALL EDGES%ADDEDGE([425._DP, 250._DP, 1._DP],
-     +                       [175._DP, 400._DP, 1._DP])
-          CALL EDGES%ADDEDGE([125._DP, 400._DP, 1._DP],
-     +                       [ 75._DP, 350._DP, 1._DP])
-          CALL EDGES%ADDEDGE([ 75._DP, 300._DP, 1._DP],
-     +                       [150._DP, 250._DP, 1._DP])
-          CALL EDGES%ADDEDGE([ 75._DP, 200._DP, 1._DP],
-     +                       [ 75._DP, 150._DP, 1._DP])
-          CALL EDGES%ADDEDGE([125._DP, 100._DP, 1._DP],
-     +                       [175._DP, 100._DP, 1._DP])
-          CALL EDGES%ADDPOINT([425._DP, 250._DP, 1._DP])
-
           COLOR = [255, 0, 0]
-          SMAT = [0.95, 0.95, 1.0, 0.0]
+          IOS = 0
 
-          DO I = 1, 70
-              CALL EDGES%DRAW(THEDISPLAY, COLOR)
-              CALL MATRIX_SCALE(M, SMAT)
-              CALL EDGES%TRANSFORM(M)
-              COLOR(1) = COLOR(1) * 0.95
+          OPEN(FD, FILE=FILENAME, ACTION="READ")
+          DO
+              READ (FD,*,IOSTAT=IOS) LINE
+              IF (IOS .NE. 0) EXIT
+              SELECT CASE (LINE)
+                  CASE ("line")
+                      READ (FD,*) RDATA(1:6)
+                      CALL EDGES%ADDEDGE(RDATA(1:3), RDATA(4:6))
+                  CASE ("ident")
+                      CALL MATRIX_IDENT(TRANSM)
+                  CASE ("scale")
+                      READ (FD,*) RDATA(1:3)
+                      CALL MATRIX_SCALE(TMPTRANS, RDATA(1:3))
+                      TRANSM = MATRIX_MULT(TMPTRANS, TRANSM)
+                  CASE ("move")
+                      READ (FD,*) RDATA(1:3)
+                      CALL MATRIX_TRANSLATE(TMPTRANS, RDATA(1:3))
+                      TRANSM = MATRIX_MULT(TMPTRANS, TRANSM)
+                  CASE ("apply")
+                      CALL EDGES%TRANSFORM(TRANSM)
+                  CASE DEFAULT
+                      WRITE (0,*) 'Warning: could not interpret "',
+     +                  TRIM(ADJUSTL(LINE)), '" at postion', FTELL(FD)
+              END SELECT
           END DO
+          CLOSE(FD)
 
+          CALL EDGES%DRAW(THEDISPLAY, COLOR)
           CALL DISPLAY_PRINT(THEDISPLAY)
       END PROGRAM MAIN
 
