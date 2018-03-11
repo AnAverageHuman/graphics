@@ -5,6 +5,7 @@
 
 C         define some constants
           INTEGER, PARAMETER :: DP=KIND(0.D0)   ! double precision
-          INTEGER, PARAMETER :: FD=10           ! unit for script
+          INTEGER, PARAMETER :: RFD=10          ! unit for script
+          INTEGER, PARAMETER :: WFD=11          ! unit for PPM
       END MODULE CONFIG
 

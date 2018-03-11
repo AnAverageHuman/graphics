@@ -5,11 +5,18 @@
           PRIVATE
           PUBLIC :: DISPLAY_PRINT, PLOT, FILL
       CONTAINS
-          SUBROUTINE DISPLAY_PRINT(DISPLAY)
+          SUBROUTINE DISPLAY_PRINT(DISPLAY, FILE)
               INTEGER, INTENT(IN) :: DISPLAY(:, :, :, :)
+              INTEGER, OPTIONAL   :: FILE
 
-              WRITE(*, "(A)") MAGICNUMBER  ! suppress beginning space
-              WRITE(*, *) DIMR, DIMC, MAXCOLOR, DISPLAY
+              IF (PRESENT(FILE)) THEN
+                  WRITE(FILE,"(A)") MAGICNUMBER  ! suppress space
+                  WRITE(FILE,*) DIMR, DIMC, MAXCOLOR, DISPLAY
+              ELSE
+                  WRITE(*,"(A)") MAGICNUMBER  ! suppress space
+                  WRITE(*,*) DIMR, DIMC, MAXCOLOR, DISPLAY
+              END IF
+
           END SUBROUTINE DISPLAY_PRINT
 
           PURE SUBROUTINE PLOT(DISPLAY, X, Y, Z, COLOR)

@@ -3,7 +3,7 @@ EXECUTABLE := a.out
 SCRIPT := script
 OBJDIR := build
 DEPLIST := depend.mk
-CLEANTARGETS := $(OBJDIR) $(EXECUTABLE) $(DEPLIST)
+CLEANTARGETS := $(OBJDIR) $(EXECUTABLE) $(DEPLIST) *.ppm
 
 LDFLAGS ?= -Wl,-O1 -Wl,--as-needed
 ifneq (,$(findstring ifort,$(FC))) # we are using Intel's ifort
@@ -23,7 +23,7 @@ ifneq ($(V),)
 	Q = true ||
 endif
 
-.PHONY: all clean debug
+.PHONY: all clean debug $(OUTFILE)
 all: $(DEPLIST) $(OUTFILE)
 
 debug: FFLAGS := $(patsubst -O%,-g,$(FFLAGS))
@@ -46,7 +46,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.for $(OBJDIR)
 
 $(OUTFILE): $(EXECUTABLE)
 	@$(Q)echo "  PPM		$@"
-	@./$(EXECUTABLE) $(SCRIPT) > $(OUTFILE)
+	@./$(EXECUTABLE) $(SCRIPT)
 
 $(DEPLIST): $(SRC)
 	@$(Q)echo "  DEPGEN	$@"

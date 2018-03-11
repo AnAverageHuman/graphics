@@ -32,26 +32,26 @@
           COLOR = [255, 0, 0]
           IOS = 0
 
-          OPEN(FD, FILE=FILENAME, ACTION="READ")
+          OPEN(RFD, FILE=FILENAME, ACTION="READ")
           DO
-              READ (FD,*,IOSTAT=IOS) LINE
+              READ (RFD,*,IOSTAT=IOS) LINE
               IF (IOS .NE. 0) EXIT
               SELECT CASE (LINE)
                   CASE ("line")
-                      READ (FD,*) RDATA(1:6)
+                      READ (RFD,*) RDATA(1:6)
                       CALL EDGES%ADDEDGE(RDATA(1:3), RDATA(4:6))
                   CASE ("ident")
                       CALL MATRIX_IDENT(TRANSM)
                   CASE ("scale")
-                      READ (FD,*) RDATA(1:3)
+                      READ (RFD,*) RDATA(1:3)
                       CALL MATRIX_SCALE(TMPTRANS, RDATA(1:3))
                       TRANSM = MATRIX_MULT(TMPTRANS, TRANSM)
                   CASE ("move")
-                      READ (FD,*) RDATA(1:3)
+                      READ (RFD,*) RDATA(1:3)
                       CALL MATRIX_TRANSLATE(TMPTRANS, RDATA(1:3))
                       TRANSM = MATRIX_MULT(TMPTRANS, TRANSM)
                   CASE ("rotate")
-                      READ (FD,*) RDIR, RDATA(1)
+                      READ (RFD,*) RDIR, RDATA(1)
                       RDATA(1) = DEG2RAD(RDATA(1))
                       SELECT CASE (RDIR)
                           CASE("x")
@@ -64,14 +64,18 @@
                       TRANSM = MATRIX_MULT(TMPTRANS, TRANSM)
                   CASE ("apply")
                       CALL EDGES%TRANSFORM(TRANSM)
+                  CASE ("save")
+                      READ (RFD,*) LINE
+                      CALL EDGES%DRAW(THEDISPLAY, COLOR)
+                      OPEN(WFD, FILE=LINE, ACTION="WRITE")
+                      CALL DISPLAY_PRINT(THEDISPLAY, WFD)
+                      CLOSE(WFD)
                   CASE DEFAULT
                       WRITE (0,*) 'Warning: could not interpret "',
-     +                  TRIM(ADJUSTL(LINE)), '" at postion', FTELL(FD)
+     +                  TRIM(ADJUSTL(LINE)), '" at postion', FTELL(RFD)
               END SELECT
           END DO
-          CLOSE(FD)
+          CLOSE(RFD)
 
-          CALL EDGES%DRAW(THEDISPLAY, COLOR)
-          CALL DISPLAY_PRINT(THEDISPLAY)
       END PROGRAM MAIN
 
