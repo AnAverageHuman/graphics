@@ -80,7 +80,7 @@
               INTEGER,       INTENT(IN)    :: COLOR(3)
               INTEGER :: I
 
-              DO I = 1, THIS%SIZE - 1
+              DO I = 1, THIS%SIZE - 1, 2
                   CALL DRAWLINE(DISPLAY, INT(THIS%EM(I, 1:3)),
      +                          INT(THIS%EM(I + 1, 1:3)), COLOR)
               END DO
