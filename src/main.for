@@ -4,12 +4,14 @@
           USE EDGEMATRIX
           USE LINE
           USE MATRIXUTIL
+          USE UTILITIES
 
           IMPLICIT NONE
           INTEGER :: I, COLOR(3), THEDISPLAY(3, DIMD, DIMC, DIMR)
 
           CHARACTER(LEN=128) :: FILENAME ! hard-limit for now
           CHARACTER(LEN=128) :: LINE
+          CHARACTER          :: RDIR
           LOGICAL  :: BOOL
           INTEGER  :: IOS
           REAL(DP) :: RDATA(10)
@@ -47,6 +49,18 @@
                   CASE ("move")
                       READ (FD,*) RDATA(1:3)
                       CALL MATRIX_TRANSLATE(TMPTRANS, RDATA(1:3))
+                      TRANSM = MATRIX_MULT(TMPTRANS, TRANSM)
+                  CASE ("rotate")
+                      READ (FD,*) RDIR, RDATA(1)
+                      RDATA(1) = DEG2RAD(RDATA(1))
+                      SELECT CASE (RDIR)
+                          CASE("x")
+                              CALL MATRIX_ROTATE(TMPTRANS, RDATA(1), 1)
+                          CASE("y")
+                              CALL MATRIX_ROTATE(TMPTRANS, RDATA(1), 2)
+                          CASE("z")
+                              CALL MATRIX_ROTATE(TMPTRANS, RDATA(1), 3)
+                      END SELECT
                       TRANSM = MATRIX_MULT(TMPTRANS, TRANSM)
                   CASE ("apply")
                       CALL EDGES%TRANSFORM(TRANSM)

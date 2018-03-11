@@ -4,8 +4,7 @@
           IMPLICIT NONE
           PRIVATE
           PUBLIC :: MATRIX_PRINT, MATRIX_IDENT, MATRIX_TRANSLATE,
-     +              MATRIX_SCALE, MATRIX_ROTX, MATRIX_ROTY, MATRIX_ROTZ,
-     +              MATRIX_MULT
+     +              MATRIX_SCALE, MATRIX_ROTATE, MATRIX_MULT
       CONTAINS
           SUBROUTINE MATRIX_PRINT(MATRIX)
               REAL(DP), INTENT(IN) :: MATRIX(:, :)
@@ -43,38 +42,21 @@
               END FORALL
           END SUBROUTINE MATRIX_SCALE
 
-          PURE SUBROUTINE MATRIX_ROTX(M, S)
+          PURE SUBROUTINE MATRIX_ROTATE(M, S, D)
               REAL(DP), INTENT(INOUT) :: M(:, :)
               REAL(DP), INTENT(IN)    :: S
+              INTEGER,  INTENT(IN)    :: D  ! 1: X, 2: Y, 3: Z
+              INTEGER                 :: I
+              REAL(DP)                :: X(4)
+              INTEGER, PARAMETER :: RM(2, 4, 3) =
+     +          RESHAPE([2,2, 2,3, 3,2, 3,3,
+     +                   1,1, 3,1, 1,3, 3,3,
+     +                   1,1, 1,2, 2,1, 2,2], [2, 4, 3])
 
+              X = [COS(S), -SIN(S), SIN(S), COS(S)]
               CALL MATRIX_IDENT(M)
-              M(2, 2) =  COS(S)
-              M(2, 3) = -SIN(S)
-              M(3, 2) =  SIN(S)
-              M(3, 3) =  COS(S)
-          END SUBROUTINE MATRIX_ROTX
-
-          PURE SUBROUTINE MATRIX_ROTY(M, S)
-              REAL(DP), INTENT(INOUT) :: M(:, :)
-              REAL(DP), INTENT(IN)    :: S
-
-              CALL MATRIX_IDENT(M)
-              M(1, 1) =  COS(S)
-              M(3, 1) = -SIN(S)
-              M(1, 3) =  SIN(S)
-              M(3, 3) =  COS(S)
-          END SUBROUTINE MATRIX_ROTY
-
-          PURE SUBROUTINE MATRIX_ROTZ(M, S)
-              REAL(DP), INTENT(INOUT) :: M(:, :)
-              REAL(DP), INTENT(IN)    :: S
-
-              CALL MATRIX_IDENT(M)
-              M(1, 1) =  COS(S)
-              M(1, 2) = -SIN(S)
-              M(2, 1) =  SIN(S)
-              M(2, 2) =  COS(S)
-          END SUBROUTINE MATRIX_ROTZ
+              FORALL (I = 1:4) M(RM(1, I, D), RM(2, I, D)) = X(I)
+          END SUBROUTINE MATRIX_ROTATE
 
           PURE FUNCTION MATRIX_MULT(A, B) RESULT(C)
               !   A   n x m   SIZE(A, 2), SIZE(A, 1)
