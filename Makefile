@@ -36,9 +36,9 @@ $(OBJDIR):
 	@$(Q)echo "  MKDIR		$(OBJDIR)"
 	@mkdir -p $(OBJDIR)
 
-$(EXECUTABLE): $(OBJ)
+$(EXECUTABLE): $(OBJDIR)/main.o
 	@$(Q)echo "  LD		$@"
-	@$(LINK.f) $^ $(LOADLIBES) $(LDLIBS) -o $@
+	@$(LINK.f) $(OBJDIR)/*.o $(LOADLIBES) $(LDLIBS) -o $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.for $(OBJDIR)
 	@$(Q)echo "  FC		$@"
