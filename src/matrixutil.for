@@ -10,7 +10,8 @@
               REAL(DP), INTENT(IN) :: MATRIX(:, :)
               INTEGER :: ROW, COL
               DO ROW=1, SIZE(MATRIX, 2)
-                  WRITE (*,*) (MATRIX(COL, ROW), COL=1, SIZE(MATRIX, 1))
+                  WRITE (0,'(*(F10.3))')
+     +              (MATRIX(COL, ROW), COL=1, SIZE(MATRIX, 1))
               ENDDO
           END SUBROUTINE MATRIX_PRINT
 
