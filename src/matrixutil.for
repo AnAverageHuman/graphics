@@ -37,7 +37,7 @@
               INTEGER :: I
 
               CALL MATRIX_IDENT(M)
-              FORALL (I = 1:MIN(SIZE(M, 1), SIZE(M, 2)))
+              FORALL (I = 1:MIN(SIZE(M, 1), SIZE(M, 2), 3))
                   M(I, I) = M(I, I) * S(I)
               END FORALL
           END SUBROUTINE MATRIX_SCALE
